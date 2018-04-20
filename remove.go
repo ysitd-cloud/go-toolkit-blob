@@ -13,7 +13,7 @@ func RemovePrefix(client *minio.Client, bucketName, objectPrefix string, recursi
 	go func() {
 		defer close(objectsCh)
 		// List all objects from a bucket-name with a matching prefix.
-		for object := range client.ListObjects("my-bucketname", "my-prefixname", true, nil) {
+		for object := range client.ListObjects(bucketName, objectPrefix, true, nil) {
 			if object.Err != nil {
 				errs = append(errs, object.Err)
 			} else {
@@ -21,7 +21,7 @@ func RemovePrefix(client *minio.Client, bucketName, objectPrefix string, recursi
 			}
 		}
 	}()
-	for rErr := range client.RemoveObjects("mybucket", objectsCh) {
+	for rErr := range client.RemoveObjects(bucketName, objectsCh) {
 		errs = append(errs, rErr.Err)
 	}
 	return errs
