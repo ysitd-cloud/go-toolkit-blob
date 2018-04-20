@@ -5,10 +5,10 @@ package cache
 
 import (
 	"context"
-	"io/ioutil"
+
+	"code.ysitd.cloud/toolkit/blob/client"
 
 	"github.com/golang/groupcache"
-	"github.com/minio/minio-go"
 )
 
 // Logger interface of getter logging
@@ -17,13 +17,13 @@ type Logger interface {
 }
 
 type getter struct {
-	client *minio.Client
+	client client.BlobStore
 	bucket string
 	logger Logger
 }
 
 // NewGetter create a groupgcache.Getter for CachedBlobStore
-func NewGetter(client *minio.Client, bucket string, logger Logger) groupcache.Getter {
+func NewGetter(client client.BlobStore, bucket string, logger Logger) groupcache.Getter {
 	return &getter{
 		client: client,
 		bucket: bucket,
@@ -36,15 +36,7 @@ func (g *getter) Get(gctx groupcache.Context, key string, dest groupcache.Sink) 
 
 	g.logger.Debugf("Get %s from s3", key)
 
-	obj, err := g.client.GetObjectWithContext(ctx, g.bucket, key, minio.GetObjectOptions{})
-	if err != nil {
-		return
-	}
-
-	defer obj.Close()
-
-	buffer, err := ioutil.ReadAll(obj)
-
+	buffer, err := g.client.GetObjectWithContext(ctx, g.bucket, key)
 	if err != nil {
 		return
 	}
