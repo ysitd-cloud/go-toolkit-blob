@@ -1,7 +1,7 @@
 // Copyright 2018 Tony Yip. All rights reserved.
 // Use of this source code is governed by MIT license.
 
-package client
+package minio
 
 import (
 	"os"
@@ -9,8 +9,8 @@ import (
 	"github.com/minio/minio-go"
 )
 
-// NewFromEnv create minio client from environment variables
-func NewFromEnv() (*minio.Client, error) {
+// NewMinioClientFromEnv create minio client from environment variables
+func NewMinioClientFromEnv() (*minio.Client, error) {
 	endpoint := os.Getenv("S3_ENDPOINT")
 	if endpoint == "" {
 		endpoint = "s3.amazonaws.com"
