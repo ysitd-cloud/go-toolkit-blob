@@ -6,6 +6,7 @@ package minio
 import (
 	"os"
 
+	"code.ysitd.cloud/toolkit/blob/client"
 	"github.com/minio/minio-go"
 )
 
@@ -22,4 +23,11 @@ func NewMinioClientFromEnv() (*minio.Client, error) {
 		os.Getenv("S3_SECRET_ACCESS_KEY"),
 		os.Getenv("S3_INSECURE") == "",
 	)
+}
+
+func New(c *minio.Client) *Store {
+	return &Store{
+		BaseBlobStore: client.BaseBlobStore{},
+		Client:        c,
+	}
 }
