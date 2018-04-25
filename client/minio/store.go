@@ -2,7 +2,6 @@ package minio
 
 import (
 	"bytes"
-	"code.ysitd.cloud/toolkit/blob/client"
 	"context"
 	"github.com/minio/minio-go"
 	"io"
@@ -10,7 +9,6 @@ import (
 )
 
 type Store struct {
-	client.BaseBlobStore
 	Client *minio.Client
 }
 

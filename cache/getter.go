@@ -11,11 +11,6 @@ import (
 	"github.com/golang/groupcache"
 )
 
-// Logger interface of getter logging
-type Logger interface {
-	Debugf(format string, vals ...interface{})
-}
-
 type getter struct {
 	client client.BlobStore
 	bucket string
@@ -24,6 +19,9 @@ type getter struct {
 
 // NewGetter create a groupgcache.Getter for CachedBlobStore
 func NewGetter(client client.BlobStore, bucket string, logger Logger) groupcache.Getter {
+	if logger == nil {
+		logger = &NullLogger{}
+	}
 	return &getter{
 		client: client,
 		bucket: bucket,

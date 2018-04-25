@@ -1,7 +1,6 @@
 package test
 
 import (
-	"code.ysitd.cloud/toolkit/blob/client"
 	"context"
 	"errors"
 	"io"
@@ -11,7 +10,6 @@ import (
 var ErrNotFound = errors.New("not found")
 
 type MockBlobStore struct {
-	client.BlobStore
 	Blob map[string][]byte
 }
 
@@ -39,4 +37,16 @@ func (s *MockBlobStore) PutObjectWithContext(_ context.Context, bucket, key stri
 func (s *MockBlobStore) DeleteObjectWithContext(_ context.Context, bucket, key string) error {
 	delete(s.Blob, makeKey(bucket, key))
 	return nil
+}
+
+func (s *MockBlobStore) GetObject(bucket, key string) ([]byte, error) {
+	return s.GetObjectWithContext(context.Background(), bucket, key)
+}
+
+func (s *MockBlobStore) PutObject(bucket, key string, body io.Reader) error {
+	return s.PutObjectWithContext(context.Background(), bucket, key, body)
+}
+
+func (s *MockBlobStore) DeleteObject(bucket, key string) error {
+	return s.DeleteObjectWithContext(context.Background(), bucket, key)
 }
